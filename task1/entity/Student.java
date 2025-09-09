@@ -1,6 +1,14 @@
-package com.example.java.exercises.task1;
+package com.example.java.exercises.task1.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Student {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name;
     private int age;
@@ -47,6 +55,7 @@ public class Student {
     }
     public void setGpa(float gpa) {
         if (gpa < 0) gpa = 0;
+        else if (gpa > 4) gpa = 4;
         this.gpa = gpa;
     }
 
