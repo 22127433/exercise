@@ -1,9 +1,7 @@
 package com.example.java.exercises.task1.repository;
 
-import ch.qos.logback.classic.spi.ILoggingEvent;
 import com.example.java.config.DatabaseConnectionConfig;
 import com.example.java.exercises.task1.entity.Student;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
@@ -17,7 +15,6 @@ import java.util.List;
 public class StudentRepository {
     private final DatabaseConnectionConfig dbConfig;
 
-    @Autowired
     public StudentRepository(DatabaseConnectionConfig dbConfig) {
         this.dbConfig = dbConfig;
     }
@@ -26,16 +23,21 @@ public class StudentRepository {
         try {
             Connection connection = dbConfig.getConnection();
             Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("select * from STUDENT where id = " + id);
+            ResultSet rs = statement.executeQuery("SELECT * FROM STUDENT WHERE id = " + id);
+            Student student = new Student();
             if (rs.next()) {
-                Student student = new Student();
                 student.setId(id);
                 student.setName(rs.getString("name"));
                 student.setAge(rs.getInt("age"));
                 student.setGpa(rs.getFloat("gpa"));
-                return student;
             }
-            return null;
+            else student = null;
+
+            rs.close();
+            statement.close();
+            connection.close();
+
+            return student;
         }
         catch (Exception e) {
             return null;
@@ -56,6 +58,11 @@ public class StudentRepository {
                 student.setGpa(rs.getInt("GPA"));
                 studentList.add(student);
             }
+
+            rs.close();
+            statement.close();
+            connection.close();
+
             return studentList;
         }
         catch (Exception e) {
@@ -67,11 +74,23 @@ public class StudentRepository {
         try {
             Connection connection = dbConfig.getConnection();
             String sql = "INSERT INTO STUDENT (name, age, gpa) VALUES (?, ?, ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, student.getName());
-            preparedStatement.setInt(2, student.getAge());
-            preparedStatement.setFloat(3, student.getGpa());
-            preparedStatement.execute();
+            try {
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+                preparedStatement.setString(1, student.getName());
+                preparedStatement.setInt(2, student.getAge());
+                preparedStatement.setFloat(3, student.getGpa());
+
+                connection.setAutoCommit(false);
+                preparedStatement.execute();
+                connection.commit();
+
+                preparedStatement.close();
+            }
+            catch (Exception e) {
+                connection.rollback();
+            }
+            connection.close();
         }
         catch (Exception e) {
         }
@@ -80,10 +99,20 @@ public class StudentRepository {
     public void deleteStudent(int id){
         try {
             Connection connection = dbConfig.getConnection();
-            Statement statement = connection.createStatement();
-            statement.executeQuery(
-            "DELETE FROM STUDENT WHERE ID = " + id
-            );
+            try {
+                Statement statement = connection.createStatement();
+
+                connection.setAutoCommit(false);
+                statement.executeUpdate(
+                        "DELETE FROM STUDENT WHERE ID = " + id
+                );
+                connection.commit();
+                statement.close();
+            }
+            catch (Exception e) {
+                connection.rollback();
+            }
+            connection.close();
         }
         catch (Exception e) {
         }
@@ -93,11 +122,22 @@ public class StudentRepository {
         try {
             Connection connection = dbConfig.getConnection();
             String sql = "UPDATE STUDENT SET name = ?, age = ?, gpa = ? WHERE ID = " + student.getId();
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, student.getName());
-            preparedStatement.setInt(2, student.getAge());
-            preparedStatement.setFloat(3, student.getGpa());
-            preparedStatement.execute();
+            try {
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+                preparedStatement.setString(1, student.getName());
+                preparedStatement.setInt(2, student.getAge());
+                preparedStatement.setFloat(3, student.getGpa());
+
+                connection.setAutoCommit(false);
+                preparedStatement.execute();
+                connection.commit();
+                preparedStatement.close();
+            }
+            catch (Exception e) {
+                connection.rollback();
+            }
+            connection.close();
         }
         catch (Exception e) {
         }

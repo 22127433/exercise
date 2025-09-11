@@ -5,8 +5,8 @@ import com.example.java.exercises.task1.dto.StudentResponseDTO;
 import com.example.java.exercises.task1.entity.Student;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class StudentMapper {
@@ -27,12 +27,14 @@ public class StudentMapper {
             return null;
         }
 
-        List<StudentResponseDTO> studentResponseDTOList = new ArrayList<>();
-        for (Student student : students) {
-            studentResponseDTOList.add(toResponseDTO(student));
-        }
-
-        return studentResponseDTOList;
+        return students
+                .stream()
+                .map(student -> new StudentResponseDTO(
+                        student.getId(),
+                        student.getName(),
+                        student.getAge(),
+                        student.getGpa()))
+                .collect(Collectors.toList());
     }
 
     public Student toEntity(StudentModifyDTO dto) {

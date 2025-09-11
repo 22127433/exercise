@@ -4,17 +4,14 @@ import com.example.java.exercises.task1.dto.StudentModifyDTO;
 import com.example.java.exercises.task1.dto.StudentResponseDTO;
 import com.example.java.exercises.task1.mapper.StudentMapper;
 import com.example.java.exercises.task1.repository.StudentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
 public class StudentServiceImpl implements StudentService {
-    private StudentRepository studentRepository;
-    private StudentMapper studentMapper;
+    private final StudentRepository studentRepository;
+    private final StudentMapper studentMapper;
 
-    @Autowired
     public StudentServiceImpl(StudentRepository studentRepository,  StudentMapper studentMapper) {
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;

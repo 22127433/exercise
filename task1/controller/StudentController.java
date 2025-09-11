@@ -3,17 +3,14 @@ package com.example.java.exercises.task1.controller;
 import com.example.java.exercises.task1.dto.StudentModifyDTO;
 import com.example.java.exercises.task1.dto.StudentResponseDTO;
 import com.example.java.exercises.task1.service.StudentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 public class StudentController {
     private StudentService studentService;
 
-    @Autowired
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
