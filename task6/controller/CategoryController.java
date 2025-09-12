@@ -22,4 +22,14 @@ public class CategoryController {
     public List<CategoryResponseDTO> getCategories(){
         return categoryService.getCategories();
     }
+
+    @GetMapping(value = "/list/even_category_id")
+    public List<CategoryResponseDTO> getCategoriesEven(){
+        return categoryService.getCategoriesEven();
+    }
+
+    @GetMapping(value = "/list/even_product_categoy_id")
+    public List<CategoryResponseDTO> getCategoriesProductsEven(){
+        return categoryService.getCategoriesProductsEven();
+    }
 }

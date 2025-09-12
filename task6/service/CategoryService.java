@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface CategoryService {
     List<CategoryResponseDTO> getCategories();
+    List<CategoryResponseDTO> getCategoriesEven();
+    List<CategoryResponseDTO> getCategoriesProductsEven();
 }

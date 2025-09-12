@@ -22,11 +22,42 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryResponseDTO> getCategories(){
-        return categoryRepository.getAllCategories().stream().map(
+        return categoryRepository
+                .getAllCategories()
+                .stream()
+                .map(
+                category -> categoryMapper.categoryToCategoryResponseDTO(
+                        category,
+                        productRepository.getProductsByCategoryId(category.getCategory_id())))
+                .toList();
+    }
+
+    @Override
+    public List<CategoryResponseDTO> getCategoriesEven(){
+        return categoryRepository
+                .getAllCategories()
+                .stream()
+                .filter(category -> category.getCategory_id() % 2 == 0)
+                .map(
+                category -> categoryMapper.categoryToCategoryResponseDTO(
+                        category,
+                        productRepository.getProductsByCategoryId(category.getCategory_id())))
+                .toList();
+    }
+
+    @Override
+    public List<CategoryResponseDTO> getCategoriesProductsEven(){
+        return categoryRepository
+                .getAllCategories()
+                .stream()
+                .filter(category -> category.getCategory_id() % 2 == 0)
+                .map(
                 category -> categoryMapper.categoryToCategoryResponseDTO(
                         category,
                         productRepository.getProductsByCategoryId(category.getCategory_id())
-                )
-        ).toList();
+                                .stream()
+                                .filter(product -> product.getProduct_id() % 2 == 0)
+                                .toList()))
+                .toList();
     }
 }
