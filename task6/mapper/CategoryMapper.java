@@ -18,7 +18,7 @@ public class CategoryMapper {
                         product.getProduct_name(),
                         product.getProduct_description(),
                         product.getProduct_price(),
-                        product.getCategory_id()))
+                        product.getCategory().getCategory_id()))
                 .toList();
 
         return  new CategoryResponseDTO(

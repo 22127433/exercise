@@ -1,7 +1,6 @@
 package com.example.java.exercises.task6.controller;
 
 import com.example.java.exercises.task6.dto.CategoryResponseDTO;
-import com.example.java.exercises.task6.entity.Category;
 import com.example.java.exercises.task6.service.CategoryService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +27,7 @@ public class CategoryController {
         return categoryService.getCategoriesEven();
     }
 
-    @GetMapping(value = "/list/even_product_categoy_id")
+    @GetMapping(value = "/list/even_product_category_id")
     public List<CategoryResponseDTO> getCategoriesProductsEven(){
         return categoryService.getCategoriesProductsEven();
     }

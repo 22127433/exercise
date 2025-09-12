@@ -1,9 +1,6 @@
 package com.example.java.exercises.task6.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Product {
@@ -13,22 +10,24 @@ public class Product {
     private String product_name;
     private String product_description;
     private int product_price;
-    private int category_id;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     public Product() {
         product_id = 0;
         product_name = "";
         product_description = "";
         product_price = 0;
-        category_id = 0;
+        category = new Category();
     }
 
-    public Product(int product_id, String product_name, String product_description, int product_price, int category_id) {
+    public Product(int product_id, String product_name, String product_description, int product_price, Category category) {
         this.product_id = product_id;
         this.product_name = product_name;
         this.product_description = product_description;
         this.product_price = product_price;
-        this.category_id = category_id;
+        this.category = category;
     }
 
     // Getter
@@ -48,8 +47,8 @@ public class Product {
         return product_price;
     }
 
-    public int getCategory_id() {
-        return category_id;
+    public Category getCategory() {
+        return category;
     }
 
     // Setter
@@ -69,7 +68,7 @@ public class Product {
         this.product_price = product_price;
     }
 
-    public void setCategory_id(int category_id) {
-        this.category_id = category_id;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

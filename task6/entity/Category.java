@@ -1,9 +1,8 @@
 package com.example.java.exercises.task6.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class Category {
@@ -13,16 +12,20 @@ public class Category {
     private String category_name;
     private String category_description;
 
+    @OneToMany(mappedBy = "category")
+    private List<Product> products;
+
     public Category() {
         this.category_id = 0;
         this.category_name = "";
         this.category_description = "";
     }
 
-    public Category(int category_id, String category_name, String category_description) {
+    public Category(int category_id, String category_name, String category_description,  List<Product> products) {
         this.category_id = category_id;
         this.category_name = category_name;
         this.category_description = category_description;
+        this.products = products;
     }
 
     // Getter
@@ -35,6 +38,9 @@ public class Category {
     public String getCategory_description() {
         return category_description;
     }
+    public List<Product> getProducts() {
+        return products;
+    }
 
     // Setter
     public void setCategory_id(int category_id) {
@@ -45,5 +51,8 @@ public class Category {
     }
     public void setCategory_description(String category_description) {
         this.category_description = category_description;
+    }
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 }
