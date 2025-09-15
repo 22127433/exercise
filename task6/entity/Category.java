@@ -7,7 +7,7 @@ import java.util.List;
 @Entity
 public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int category_id;
     private String category_name;
     private String category_description;
@@ -16,9 +16,9 @@ public class Category {
     private List<Product> products;
 
     public Category() {
-        this.category_id = 0;
-        this.category_name = "";
-        this.category_description = "";
+//        this.category_id = 0;
+//        this.category_name = "";
+//        this.category_description = "";
     }
 
     public Category(int category_id, String category_name, String category_description,  List<Product> products) {

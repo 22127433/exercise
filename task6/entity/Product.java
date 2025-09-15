@@ -5,8 +5,8 @@ import jakarta.persistence.*;
 @Entity
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int product_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int productId;
     private String product_name;
     private String product_description;
     private int product_price;
@@ -15,15 +15,19 @@ public class Product {
     private Category category;
 
     public Product() {
-        product_id = 0;
+//        productId = 0;
         product_name = "";
         product_description = "";
         product_price = 0;
         category = new Category();
     }
 
-    public Product(int product_id, String product_name, String product_description, int product_price, Category category) {
-        this.product_id = product_id;
+    public Product(int productId){
+        this.productId = productId;
+    }
+
+    public Product(int productId, String product_name, String product_description, int product_price, Category category) {
+        this.productId = productId;
         this.product_name = product_name;
         this.product_description = product_description;
         this.product_price = product_price;
@@ -31,8 +35,8 @@ public class Product {
     }
 
     // Getter
-    public int getProduct_id() {
-        return product_id;
+    public int getProductId() {
+        return productId;
     }
 
     public String getProduct_name() {
@@ -52,8 +56,8 @@ public class Product {
     }
 
     // Setter
-    public void setProduct_id(int product_id) {
-        this.product_id = product_id;
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 
     public void setProduct_name(String product_name) {
