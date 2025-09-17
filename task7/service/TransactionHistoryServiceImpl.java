@@ -24,7 +24,7 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
 
     @Override
     @Transactional(
-            propagation = Propagation.REQUIRES_NEW,
+//            propagation = Propagation.REQUIRES_NEW,
             isolation = Isolation.READ_COMMITTED
     )
     public void createTransaction(int account_id, BigDecimal amount, String description) {
