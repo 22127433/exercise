@@ -6,7 +6,6 @@ import com.example.java.exercises.task7.service.interfaces.AccountService;
 import com.example.java.exercises.task7.service.interfaces.TransactionHistoryService;
 import com.example.java.exercises.task7.service.interfaces.TransferMoneyService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -23,9 +22,7 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
     }
 
     @Override
-    @Transactional(
-        isolation = Isolation.REPEATABLE_READ
-    )
+    @Transactional
     public ListAccountResponseDTO transferMoney(int from_account_id, int to_account_id, BigDecimal amount, String description) {
         transactionHistoryService.createTransaction(from_account_id, amount.negate(), description);
         transactionHistoryService.createTransaction(to_account_id, amount, description);

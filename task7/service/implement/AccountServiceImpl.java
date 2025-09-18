@@ -35,7 +35,7 @@ public class AccountServiceImpl implements AccountService {
             return new AccountResponseDTO(
                     account.get().getId(),
                     account.get().getOwner_name(),
-                    account.get().getBalance().toString()
+                    account.get().getBalance().doubleValue()
             );
         }
         return null;

@@ -3,10 +3,12 @@ package com.example.java.exercises.task7.controller;
 import com.example.java.exercises.task7.dto.ListAccountResponseDTO;
 import com.example.java.exercises.task7.dto.TransferMoneyDTO;
 import com.example.java.exercises.task7.service.interfaces.TransferMoneyService;
+import com.example.java.exercises.task8.Main;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.example.java.exercises.task8.Main.*;
 
 import java.math.BigDecimal;
 
@@ -21,6 +23,11 @@ public class TransferMoneyController {
 
     @PostMapping(value = "/")
     public ListAccountResponseDTO transferMoney(@RequestBody TransferMoneyDTO transferMoneyDTO) {
+        try {
+            Main.validate(transferMoneyDTO);
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
         return transferMoneyService.transferMoney(transferMoneyDTO.from_account_id(), transferMoneyDTO.to_account_id(), new BigDecimal(transferMoneyDTO.amount()), transferMoneyDTO.description());
     }
 }
