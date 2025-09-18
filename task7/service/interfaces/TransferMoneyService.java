@@ -1,6 +1,5 @@
-package com.example.java.exercises.task7.service;
+package com.example.java.exercises.task7.service.interfaces;
 
-import com.example.java.exercises.task7.dto.AccountResponseDTO;
 import com.example.java.exercises.task7.dto.ListAccountResponseDTO;
 
 import java.math.BigDecimal;

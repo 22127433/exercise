@@ -2,7 +2,7 @@ package com.example.java.exercises.task7.controller;
 
 import com.example.java.exercises.task7.dto.ListAccountResponseDTO;
 import com.example.java.exercises.task7.dto.TransferMoneyDTO;
-import com.example.java.exercises.task7.service.TransferMoneyService;
+import com.example.java.exercises.task7.service.interfaces.TransferMoneyService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

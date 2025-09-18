@@ -1,6 +1,4 @@
-package com.example.java.exercises.task7.service;
-
-import org.springframework.stereotype.Service;
+package com.example.java.exercises.task7.service.interfaces;
 
 import java.math.BigDecimal;
 

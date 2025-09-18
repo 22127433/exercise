@@ -1,7 +1,10 @@
-package com.example.java.exercises.task7.service;
+package com.example.java.exercises.task7.service.implement;
 
 import com.example.java.exercises.task7.dto.AccountResponseDTO;
 import com.example.java.exercises.task7.dto.ListAccountResponseDTO;
+import com.example.java.exercises.task7.service.interfaces.AccountService;
+import com.example.java.exercises.task7.service.interfaces.TransactionHistoryService;
+import com.example.java.exercises.task7.service.interfaces.TransferMoneyService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +24,7 @@ public class TransferMoneyServiceImpl implements TransferMoneyService {
 
     @Override
     @Transactional(
-        isolation = Isolation.SERIALIZABLE
+        isolation = Isolation.REPEATABLE_READ
     )
     public ListAccountResponseDTO transferMoney(int from_account_id, int to_account_id, BigDecimal amount, String description) {
         transactionHistoryService.createTransaction(from_account_id, amount.negate(), description);

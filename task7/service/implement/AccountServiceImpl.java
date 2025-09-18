@@ -1,8 +1,9 @@
-package com.example.java.exercises.task7.service;
+package com.example.java.exercises.task7.service.implement;
 
 import com.example.java.exercises.task7.dto.AccountResponseDTO;
 import com.example.java.exercises.task7.entity.Account;
 import com.example.java.exercises.task7.repository.AccountRepository;
+import com.example.java.exercises.task7.service.interfaces.AccountService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +25,7 @@ public class AccountServiceImpl implements AccountService {
         Optional<Account> account = accountRepository.findById(account_id);
         if (account.isPresent()) {
             BigDecimal currentBalance = account.get().getBalance();
-            if (currentBalance.compareTo(balance) > 0) {
+            if (currentBalance.compareTo(balance) < 0) {
                 throw new IllegalArgumentException("Tài khoản không đủ tiền");
             }
             currentBalance = currentBalance.add(balance);

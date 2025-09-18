@@ -1,12 +1,12 @@
-package com.example.java.exercises.task7.service;
+package com.example.java.exercises.task7.service.implement;
 
 import com.example.java.exercises.task7.entity.Account;
 import com.example.java.exercises.task7.entity.TransactionHistory;
 import com.example.java.exercises.task7.repository.AccountRepository;
 import com.example.java.exercises.task7.repository.TransactionHistoryRepository;
+import com.example.java.exercises.task7.service.interfaces.TransactionHistoryService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -24,8 +24,7 @@ public class TransactionHistoryServiceImpl implements TransactionHistoryService 
 
     @Override
     @Transactional(
-//            propagation = Propagation.REQUIRES_NEW,
-            isolation = Isolation.READ_COMMITTED
+//            propagation = Propagation.REQUIRES_NEW
     )
     public void createTransaction(int account_id, BigDecimal amount, String description) {
         TransactionHistory transactionHistory = new TransactionHistory();
