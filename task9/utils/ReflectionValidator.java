@@ -23,41 +23,36 @@ public class ReflectionValidator {
         };
     }
 
-    public static void validate(Object object){
-        if (object == null){
+    public static void validate(Object object) throws Exception {
+        if (object == null) {
             throw new IllegalArgumentException("object is null");
         }
         Class<?> clazz = object.getClass();
 
         Field[] fields = clazz.getDeclaredFields();
-        for (Field field : fields){
+        for (Field field : fields) {
             field.setAccessible(true);
-            try {
-                Object value = field.get(object);
-                String name = field.getName();
+            Object value = field.get(object);
+            String name = field.getName();
 
-                if (value == null && !isNullableField(name, clazz.getSimpleName())) {
-                    throw new IllegalArgumentException("field" + name + " must be not null");
-                }
-                if (value == null) continue;
+            if (value == null && !isNullableField(name, clazz.getSimpleName())) {
+                throw new IllegalArgumentException("field" + name + " must be not null");
+            }
+            if (value == null) continue;
 
-                switch (value){
-                    case String s when s.trim().isEmpty() ->
+            switch (value) {
+                case String s when s.trim().isEmpty() ->
                         throw new IllegalArgumentException("field" + name + " must not be empty");
-                    case String s when (name.equals("email") && !s.matches(EMAIL_REGEX)) ->
-                        throw new IllegalArgumentException("field" +  name + " not match email");
-                    case String s when (name.equals("phone") && !s.matches(PHONE_REGEX)) ->
-                        throw new IllegalArgumentException("field" +  name + " not match phone");
-                    case String s when (name.equals("name") && s.length() > 25) ->
+                case String s when (name.equals("email") && !s.matches(EMAIL_REGEX)) ->
+                        throw new IllegalArgumentException("field" + name + " not match email");
+                case String s when (name.equals("phone") && !s.matches(PHONE_REGEX)) ->
+                        throw new IllegalArgumentException("field" + name + " not match phone");
+                case String s when (name.equals("name") && s.length() > 25) ->
                         throw new IllegalArgumentException("field" + name + " mustn't exceed 25 characters");
-                    case Integer i when i <= 0 ->
-                        throw new IllegalArgumentException("field" +  name + " must be positive");
-                    case Double d when d <= 0 ->
-                        throw new IllegalArgumentException("field" +  name + " must be positive");
-                    default -> {}
+                case Integer i when i <= 0 -> throw new IllegalArgumentException("field" + name + " must be positive");
+                case Double d when d <= 0 -> throw new IllegalArgumentException("field" + name + " must be positive");
+                default -> {
                 }
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
             }
         }
     }

@@ -9,9 +9,11 @@ import com.example.java.exercises.task9.mapper.ProductMapper;
 import com.example.java.exercises.task9.repository.InventoryRepository;
 import com.example.java.exercises.task9.repository.ProductRepository;
 import com.example.java.exercises.task9.service.interfaces.ProductService;
+import com.example.java.exercises.task9.utils.ReflectionValidator;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -49,8 +51,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public ProductDTO createProduct(ProductModifyDTO productModifyDTO){
+        try {
+            ReflectionValidator.validate(productModifyDTO);
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         Product product = Product.builder()
                 .name(productModifyDTO.getName())
                 .price(BigDecimal.valueOf(productModifyDTO.getPrice()))
@@ -72,8 +80,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional (isolation = Isolation.SERIALIZABLE)
+    @Transactional (
+            propagation = Propagation.REQUIRES_NEW,
+            isolation = Isolation.SERIALIZABLE
+    )
     public void updateProduct(int id, ProductModifyDTO productModifyDTO){
+        try {
+            ReflectionValidator.validate(productModifyDTO);
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
         Inventory inventory = inventoryRepository.findByProductId(id)

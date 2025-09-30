@@ -26,8 +26,6 @@ public class OrderController {
 
     @PostMapping(value = "/{customerId}")
     public ResponseEntity<OrderDTO> createOrder(@PathVariable int customerId, @RequestBody OrderModifyDTO orderModifyDTO){
-        ReflectionValidator.validate(orderModifyDTO);
-
         OrderDTO orderDTO = orderService.createOrder(customerId, orderModifyDTO);
         if (orderDTO == null){
             return ResponseEntity.badRequest().build();

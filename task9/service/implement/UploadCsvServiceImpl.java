@@ -37,15 +37,25 @@ public class UploadCsvServiceImpl implements UploadCsvService {
                             );
                             ProductDTO productDTO = productService.getProductById(id);
                             if (productDTO == null) {
-                                productService.createProduct(productModifyDTO);
+                                try {
+                                    productService.createProduct(productModifyDTO);
+                                }
+                                catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
                             else {
                                 quantity += productDTO.getQuantity();
-                                if (quantity < 0) {
-                                    throw new RuntimeException("Quantity cannot be less than 0");
-                                }
+//                                if (quantity < 0) {
+//                                    throw new RuntimeException("Quantity cannot be less than 0");
+//                                }
                                 productModifyDTO.setQuantity(quantity);
-                                productService.updateProduct(id, productModifyDTO);
+                                try {
+                                    productService.updateProduct(id, productModifyDTO);
+                                }
+                                catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     });

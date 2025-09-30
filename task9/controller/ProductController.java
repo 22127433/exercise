@@ -30,7 +30,11 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductModifyDTO productModifyDTO){
-        ReflectionValidator.validate(productModifyDTO);
+        try {
+            ReflectionValidator.validate(productModifyDTO);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         ProductDTO productDTO = productService.createProduct(productModifyDTO);
         if (productDTO == null){
             return ResponseEntity.notFound().build();
@@ -40,7 +44,11 @@ public class ProductController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<String> updateProduct(@PathVariable int id, @RequestBody ProductModifyDTO productModifyDTO){
-        ReflectionValidator.validate(productModifyDTO);
+        try {
+            ReflectionValidator.validate(productModifyDTO);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         try {
             productService.updateProduct(id, productModifyDTO);
             return ResponseEntity.ok("Product updated successfully");
