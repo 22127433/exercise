@@ -23,11 +23,7 @@ public class TransferMoneyController {
 
     @PostMapping(value = "/")
     public ListAccountResponseDTO transferMoney(@RequestBody TransferMoneyDTO transferMoneyDTO) {
-        try {
-            Main.validate(transferMoneyDTO);
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }
+        Main.validate(transferMoneyDTO);
         return transferMoneyService.transferMoney(transferMoneyDTO.from_account_id(), transferMoneyDTO.to_account_id(), new BigDecimal(transferMoneyDTO.amount()), transferMoneyDTO.description());
     }
 }

@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 public class TransactionHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false, insertable = false)
     private int id;
     private BigDecimal amount;
     private String description;

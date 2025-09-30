@@ -7,7 +7,11 @@ public class Main {
     private static final String PHONE_REGEX = "^\\+?[0-9]{9,15}$";
 
 
-    public static void validate(Object object) throws NoSuchFieldException {
+    public static void validate(Object object) {
+        if (object == null) {
+            System.err.println("Object is null");
+            return;
+        }
         Class<?> clazz = object.getClass();
 
         Field[] fields = clazz.getDeclaredFields();
@@ -17,6 +21,8 @@ public class Main {
                 Object value = field.get(object);
                 String name = field.getName();
                 switch (value) {
+                    case null ->
+                        System.out.println(name + " is null");
                     case String s when s.length() > 50 ->
                         System.out.println(name + ": " + s + " exceeds the maximum length 50");
                     case String s when s.matches(EMAIL_REGEX) ->
@@ -79,12 +85,7 @@ public class Main {
 //    }
 
     public static void main(String[] args) {
-        TestClass object = new TestClass(1, 2, -212.232323, "");
-        try {
-            validate(object);
-
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }
+        TestClass object = new TestClass(1, 2, -212.232323, null);
+        validate(object);
     }
 }
