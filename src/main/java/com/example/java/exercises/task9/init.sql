@@ -1,0 +1,85 @@
+CREATE TABLE Customers (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name NVARCHAR2(50) NOT NULL,
+    email VARCHAR2(50),
+    phone VARCHAR2(10),
+    updatedAt TIMESTAMP,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE PaymentAccount (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    customerId NUMBER NOT NULL,
+    name VARCHAR2(100) NOT NULL,
+    balance DECIMAL(15,2) NOT NULL ,
+    updatedAt TIMESTAMP,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Products (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name  NVARCHAR2(25) NOT NULL,
+    price DECIMAL(15, 2),
+    updatedAt TIMESTAMP,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE Inventory (
+    id NUMBER GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY,
+    productId NUMBER NOT NULL,
+    quantity INTEGER ,
+    updatedAt TIMESTAMP,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Orders (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    customerId NUMBER NOT NULL,
+    status NUMBER(1, 0),
+    totalPrice DECIMAL(15, 2) ,
+    updatedAt TIMESTAMP,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE OrdersItem (
+    id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    orderId NUMBER NOT NULL,
+    productId NUMBER NOT NULL,
+    quantity INTEGER,
+    price DECIMAL (15, 2),
+    updatedAt TIMESTAMP,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- FOREIGN KEY
+ALTER TABLE PaymentAccount
+ADD CONSTRAINT FK_PaymentAccount_Customers
+FOREIGN KEY (customerId)
+REFERENCES Customers (id);
+
+-- ALTER TABLE TransactionHistory
+-- ADD CONSTRAINT FK_TransactionHistory_PaymentAccount
+-- FOREIGN KEY (paymentAccountId)
+-- REFERENCES PaymentAccount (id);
+
+ALTER TABLE Inventory
+    ADD CONSTRAINT FK_Inventory_Products
+        FOREIGN KEY (productId)
+            REFERENCES Products (id);
+
+ALTER TABLE Orders
+ADD CONSTRAINT FK_Orders_Customers
+FOREIGN KEY (customerId)
+REFERENCES Customers (id);
+
+ALTER TABLE OrdersItem
+ADD CONSTRAINT FK_OrdersItem_Orders
+FOREIGN KEY (orderId)
+REFERENCES Orders (id);
+
+ALTER TABLE OrdersItem
+ADD CONSTRAINT FK_OrdersItem_Products
+FOREIGN KEY (productId)
+REFERENCES Products (id);
+COMMIT;

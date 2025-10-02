@@ -1,0 +1,5 @@
+23 NGUYỄN VĂN A 2004-11-27 Địa chỉ A Nam 
+24 NGUYỄN VĂN B 2004-11-27 Địa chỉ B Nữ 
+25 NGUYỄN VĂN C 2004-11-27 Địa chỉ B Nữ 
+26 NGUYỄN VĂN D 2004-11-27 Địa chỉ B Nữ 
+27 NGUYỄN VĂN E 2004-11-27 Địa chỉ B Nữ 
