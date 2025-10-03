@@ -2,6 +2,8 @@ package com.example.java.exercises.task9.dto.product;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -12,6 +14,6 @@ public class ProductDTO {
     private String name;
     private double price;
     private int quantity;
-    private String updatedAt;
-    private String createdAt;
+    private LocalDateTime updatedAt;
+    private LocalDateTime createdAt;
 }

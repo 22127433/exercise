@@ -20,12 +20,11 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional(
-            propagation = Propagation.MANDATORY,
-            isolation = Isolation.SERIALIZABLE
+            propagation = Propagation.MANDATORY
     )
     public void charge(int paymentAccountId, BigDecimal amount, boolean success) {
-        PaymentAccount paymentAccount = paymentAccountRepository.findById(paymentAccountId)
-                .orElseThrow(() -> new RuntimeException("PaymentAccount not found"));
+        PaymentAccount paymentAccount = paymentAccountRepository.findByIdWithLock(paymentAccountId)
+                .orElseThrow();
 
         if (paymentAccount.getBalance().compareTo(amount) < 0) {
             throw new RuntimeException("Insufficient funds");
@@ -35,5 +34,7 @@ public class PaymentServiceImpl implements PaymentService {
         if (!success){
             throw new RuntimeException("Payment failed");
         }
+
+        paymentAccountRepository.save(paymentAccount);
     }
 }

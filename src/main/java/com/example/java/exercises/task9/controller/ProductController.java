@@ -25,6 +25,7 @@ public class ProductController {
         if (productDTO == null){
             return ResponseEntity.notFound().build();
         }
+        // message, code, data tạo 1 object để mọi return đều chung 1 format object
         return ResponseEntity.ok(productDTO);
     }
 

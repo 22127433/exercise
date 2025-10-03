@@ -83,3 +83,5 @@ ADD CONSTRAINT FK_OrdersItem_Products
 FOREIGN KEY (productId)
 REFERENCES Products (id);
 COMMIT;
+
+select * from orders;

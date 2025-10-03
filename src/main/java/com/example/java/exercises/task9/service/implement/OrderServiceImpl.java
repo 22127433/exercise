@@ -10,7 +10,6 @@ import com.example.java.exercises.task9.repository.CustomerRepository;
 import com.example.java.exercises.task9.repository.OrderRepository;
 import com.example.java.exercises.task9.service.interfaces.OrderItemService;
 import com.example.java.exercises.task9.service.interfaces.OrderService;
-import com.example.java.exercises.task9.utils.ReflectionValidator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -40,12 +39,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrderDTO createOrder(int customerId, OrderModifyDTO orderModifyDTO) {
-        try {
-            ReflectionValidator.validate(orderModifyDTO);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new RuntimeException("Customer Not Found"));
         Order order = Order.builder()
@@ -88,5 +81,6 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
         order.setStatus(true);
+        orderRepository.save(order);
     }
 }

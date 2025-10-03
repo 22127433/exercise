@@ -12,8 +12,8 @@ public class ProductMapper {
             product.getName(),
             product.getPrice().doubleValue(),
             quantity,
-            product.getUpdatedAt().toString(),
-            product.getCreatedAt().toString()
+            product.getUpdatedAt(),
+            product.getCreatedAt()
         );
     }
 }

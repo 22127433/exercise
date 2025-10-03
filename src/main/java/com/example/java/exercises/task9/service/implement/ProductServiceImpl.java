@@ -9,8 +9,6 @@ import com.example.java.exercises.task9.mapper.ProductMapper;
 import com.example.java.exercises.task9.repository.InventoryRepository;
 import com.example.java.exercises.task9.repository.ProductRepository;
 import com.example.java.exercises.task9.service.interfaces.ProductService;
-import com.example.java.exercises.task9.utils.ReflectionValidator;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -36,68 +34,55 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDTO getProductById(int id) {
-        Product product = productRepository.findById(id).orElse(null);
+        Product product = productRepository.findProductById(id);
         if (product == null) return null;
-        Inventory inventory = inventoryRepository.findByProductId(id).orElse(null);
-        if (inventory == null) return null;
+
         return ProductDTO.builder()
                 .id(product.getId())
                 .name(product.getName())
                 .price(product.getPrice().doubleValue())
-                .quantity(inventory.getQuantity())
-                .updatedAt(product.getUpdatedAt().toString())
-                .createdAt(product.getCreatedAt().toString())
+                .quantity(product.getInventory().getQuantity())
+                .updatedAt(product.getUpdatedAt())
+                .createdAt(product.getCreatedAt())
                 .build();
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public ProductDTO createProduct(ProductModifyDTO productModifyDTO){
-        try {
-            ReflectionValidator.validate(productModifyDTO);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public ProductDTO createProduct(ProductModifyDTO productModifyDTO) {
         Product product = Product.builder()
                 .name(productModifyDTO.getName())
                 .price(BigDecimal.valueOf(productModifyDTO.getPrice()))
                 .build();
+
         Inventory inventory = Inventory.builder()
                 .quantity(productModifyDTO.getQuantity())
                 .product(product)
                 .build();
+
         productRepository.save(product);
         inventoryRepository.save(inventory);
+
         return ProductDTO.builder()
                 .id(product.getId())
                 .name(product.getName())
                 .price(product.getPrice().doubleValue())
                 .quantity(inventory.getQuantity())
-                .updatedAt(product.getUpdatedAt().toString())
-                .createdAt(product.getCreatedAt().toString())
+                .updatedAt(product.getUpdatedAt())
+                .createdAt(product.getCreatedAt())
                 .build();
     }
 
     @Override
-    @Transactional (
+    @Transactional(
             propagation = Propagation.REQUIRES_NEW,
             isolation = Isolation.SERIALIZABLE
     )
-    public void updateProduct(int id, ProductModifyDTO productModifyDTO){
-        try {
-            ReflectionValidator.validate(productModifyDTO);
-        }
-        catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
-        Inventory inventory = inventoryRepository.findByProductId(id)
-                .orElseThrow(() -> new RuntimeException("Inventory not found"));
-        if (inventory.getQuantity() != productModifyDTO.getQuantity()) {
-            inventory.setQuantity(productModifyDTO.getQuantity());
-            inventoryRepository.save(inventory);
+    public void updateProduct(int id, ProductModifyDTO productModifyDTO) {
+        Product product = productRepository.findProductById(id);
+        if (product.getInventory().getQuantity() != productModifyDTO.getQuantity()) {
+            product.getInventory().setQuantity(productModifyDTO.getQuantity());
+            inventoryRepository.save(product.getInventory());
         }
         product.setName(productModifyDTO.getName());
         product.setPrice(new BigDecimal(productModifyDTO.getPrice()));
@@ -106,17 +91,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void deleteProductById(int id){
-        productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
-        inventoryRepository.findByProductId(id)
-                .orElseThrow(() -> new RuntimeException("Inventory not found"));
+    public void deleteProductById(int id) {
+        productRepository.findProductById(id);
         productRepository.deleteById(id);
-        inventoryRepository.deleteById(id);
     }
 
     @Override
-    public List<ProductDTO> getProductsLikeName(String name){
+    public List<ProductDTO> getProductsLikeName(String name) {
         return productRepository.findByNameContaining(name)
                 .stream()
                 .map(product -> productMapper.toDTO(
@@ -130,26 +111,22 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDTO> sortProductsAscByField(String field) {
-        return productRepository.findAll(Sort.by(Sort.Direction.ASC,field))
+        return productRepository.findAllProductsByField(field)
                 .stream()
                 .map(product -> productMapper.toDTO(
                         product,
-                        inventoryRepository
-                                .findByProductId(product.getId())
-                                .orElseThrow(() -> new RuntimeException("Inventory not found"))
-                                .getQuantity()))
+                        product.getInventory().getQuantity()))
                 .toList();
     }
 
     @Override
-    public List<ProductDTO> filterProducts(ProductParamRequest productParamRequest){
+    public List<ProductDTO> filterProducts(ProductParamRequest productParamRequest) {
         BigDecimal fromPrice = BigDecimal.valueOf(productParamRequest.getFromPrice());
         BigDecimal toPrice = BigDecimal.valueOf(productParamRequest.getToPrice());
         List<Product> products;
-        if (productParamRequest.isAsc()){
+        if (productParamRequest.isAsc()) {
             products = productRepository.findProductsByPriceBetweenOrderByPriceAsc(fromPrice, toPrice);
-        }
-        else products = productRepository.findProductsByPriceBetweenOrderByPriceDesc(fromPrice, toPrice);
+        } else products = productRepository.findProductsByPriceBetweenOrderByPriceDesc(fromPrice, toPrice);
 
         return products
                 .stream()
@@ -163,7 +140,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional (isolation = Isolation.SERIALIZABLE)
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public void adjustInventoryQuantity(int productId, int quantity, boolean isIncrease) {
         Inventory inventory = inventoryRepository.findByProductId(productId)
                 .orElseThrow(() -> new RuntimeException("Inventory not found"));
@@ -171,8 +148,10 @@ public class ProductServiceImpl implements ProductService {
             if (inventory.getQuantity() < quantity) {
                 throw new RuntimeException("Inventory Quantity Not Enough");
             }
-            quantity *= -1;
+            inventoryRepository.decreaseStock(productId, quantity);
         }
-        inventory.setQuantity(inventory.getQuantity() + quantity);
+        else {
+            inventoryRepository.increaseStock(productId, quantity);
+            }
     }
 }

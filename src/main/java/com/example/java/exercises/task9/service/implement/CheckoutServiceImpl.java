@@ -21,11 +21,13 @@ public class CheckoutServiceImpl implements CheckoutService {
     }
 
     @Override
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional
     public void checkout(int orderId, int paymentAccountId) {
         OrderDTO orderDTO = orderService.getOrder(orderId);
-        orderItemService.checkoutOrderItems(orderDTO.orderItemDTOs());
-        paymentService.charge(paymentAccountId, BigDecimal.valueOf(orderDTO.totalPrice()), false);
-        orderService.markAsPaid(orderId);
+        if (!orderDTO.status()){
+            orderItemService.checkoutOrderItems(orderDTO.orderItemDTOs());
+            paymentService.charge(paymentAccountId, BigDecimal.valueOf(orderDTO.totalPrice()), true);
+            orderService.markAsPaid(orderId);
+        }
     }
 }

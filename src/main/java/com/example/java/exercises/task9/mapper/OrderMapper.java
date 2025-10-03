@@ -14,8 +14,8 @@ public class OrderMapper {
                 order.getCustomer().getId(),
                 order.isStatus(),
                 order.getTotalPrice().doubleValue(),
-                order.getUpdatedAt().toString(),
-                order.getCreatedAt().toString(),
+                order.getUpdatedAt(),
+                order.getCreatedAt(),
                 order.getOrderItems().stream().map(this::toDTO).toList()
         );
     }
@@ -27,8 +27,8 @@ public class OrderMapper {
             orderItem.getProduct().getId(),
             orderItem.getQuantity(),
             orderItem.getPrice().doubleValue(),
-            orderItem.getUpdatedAt().toString(),
-            orderItem.getCreatedAt().toString()
+            orderItem.getUpdatedAt(),
+            orderItem.getCreatedAt()
         );
     }
 }

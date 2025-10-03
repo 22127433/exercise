@@ -37,7 +37,7 @@ public class OrderItemServiceImpl implements OrderItemService {
 
     @Override
     @Transactional
-    public List<OrderItemDTO> createOrderItem(List<OrderItemModifyDTO> orderItemModifyDTOs, Order order){
+    public List<OrderItemDTO> createOrderItem(List<OrderItemModifyDTO> orderItemModifyDTOs, Order order) {
         List<OrderItem> orderItems = orderItemModifyDTOs
                 .stream()
                 .map(dto -> {

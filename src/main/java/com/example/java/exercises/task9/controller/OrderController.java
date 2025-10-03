@@ -4,6 +4,7 @@ import com.example.java.exercises.task9.dto.order.OrderDTO;
 import com.example.java.exercises.task9.dto.order.OrderModifyDTO;
 import com.example.java.exercises.task9.service.interfaces.CheckoutService;
 import com.example.java.exercises.task9.service.interfaces.OrderService;
+import com.example.java.exercises.task9.utils.ReflectionValidator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -26,6 +27,12 @@ public class OrderController {
     //
     @PostMapping(value = "/{customerId}")
     public ResponseEntity<OrderDTO> createOrder(@PathVariable int customerId, @RequestBody OrderModifyDTO orderModifyDTO){
+        try {
+            ReflectionValidator.validate(orderModifyDTO);
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         OrderDTO orderDTO = orderService.createOrder(customerId, orderModifyDTO);
         if (orderDTO == null){
             return ResponseEntity.badRequest().build();

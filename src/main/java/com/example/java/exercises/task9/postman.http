@@ -1,6 +1,6 @@
 ###
 # 1. Get product by id (GET /product-task-9/{id})
-GET http://localhost:8080/product-task-9/36 HTTP/1.1
+GET http://localhost:8080/product-task-9/48 HTTP/1.1
 Accept: application/json
 
 ###
@@ -24,13 +24,13 @@ Content-Type: application/json
 {
   "name": "Áo thun cập nhật",
   "price": 250000,
-  "quantity": 70
+  "quantity": 90
 }
 
 ###
 
 # 4. Delete product by id (DELETE /product-task-9/{id})
-DELETE http://localhost:8080/product-task-9/1 HTTP/1.1
+DELETE http://localhost:8080/product-task-9/48 HTTP/1.1
 
 ###
 
@@ -61,7 +61,7 @@ Content-Type: application/json
   "items": [
     {
       "productId": 1,
-      "quantity": 1
+      "quantity": 100000000
     },
     {
       "productId": 3,
@@ -90,12 +90,12 @@ Accept: application/json
 ###
 
 # 12. Import product with csv file
-POST http://localhost:8080/upload-csv/import-product
+POST http://localhost:8080/upload-csv/import-product HTTP/2
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="file"; filename="demo.csv"
+Content-Disposition: form-data; name="file"; filename="output.csv"
 Content-Type: text/csv
 
-< ./demo.csv
+< ./output.csv
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--

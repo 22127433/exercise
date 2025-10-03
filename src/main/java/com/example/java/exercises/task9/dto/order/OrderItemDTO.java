@@ -1,4 +1,6 @@
 package com.example.java.exercises.task9.dto.order;
 
-public record OrderItemDTO(int id, int orderId, int productId, int quantity, double price, String updatedAt, String createdAt) {
+import java.time.LocalDateTime;
+
+public record OrderItemDTO(int id, int orderId, int productId, int quantity, double price, LocalDateTime updatedAt, LocalDateTime createdAt) {
 }

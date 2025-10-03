@@ -94,8 +94,8 @@ INSERT INTO OrdersItem (orderId, productId, quantity, price) VALUES (10, 7, 2, 1
 
 COMMIT;
 
-SELECT * FROM orders;
-SELECT * FROM ORDERSITEM WHERE ORDERID = 26;
+SELECT * FROM ORDERS;
+SELECT * FROM ORDERSITEM where PRODUCTID = 1;
 SELECT * FROM INVENTORY;
 select * from PAYMENTACCOUNT;
 select * from INVENTORY;
@@ -105,3 +105,5 @@ update PAYMENTACCOUNT
 set balance = 10000000
 where id = 2;
 commit;
+
+select * from PRODUCTS;
